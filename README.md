@@ -2,7 +2,7 @@ nodejs学习目录
 
 第 1 节 [Node.js简介](https://github.com/Anthony-Wilson/nodejs/tree/master/About%20node)
 
-第 2 节 了解 [NPM](https://github.com/Anthony-Wilson/nodejs/tree/master/lesson2-npm)
+第 2 节 [了解 NPM](https://github.com/Anthony-Wilson/nodejs/tree/master/lesson2-npm)
 
 
 第 9 节 Buffer
