@@ -57,3 +57,37 @@ npm set init-license 'ISC'
 ![npmrc](http://p0hnox1tr.bkt.clouddn.com/npmrc.png)
 ![npm-set](http://p0hnox1tr.bkt.clouddn.com/npm-set.png)
 如果某个项目有不同的设置，可以对该项目运行`npm config`。
+
+使用下面的命令可以在安装模块的时候，`package.json`将记录模块的确切版本，而不是一个可选的版本的范围。
+```
+npm set save-exact true
+```
+
+# npm config
+```
+npm config set prefix $dir
+```
+此命令可以将指定的`$dir`目录设置为`全局安装目录`。
+这个命令在发现我没有权限`npm install`的时候很有用，有这个命令就不需要`sudo`命令授权。
+
+在执行`npm install`的后，每一个模块前面会有一个`^`符号，表示只能安装此版本以上的模块，即允许小版本升级。
+![npm ^](http://p0hnox1tr.bkt.clouddn.com/npm%20%5E.png)
+
+使用以下命令可以变为`只允许补丁包的升级`。
+```
+npm config set save-prefix ~
+```
+
+使用以下命令可以在使用`npm init`时，设置默认的`name`与`email`。
+```
+npm config set init.author.name $name
+npm config set init.author.email $email
+```
+当然也可以使用`npm set`指定全局的默认`name`与`email`。
+
+# npm info
+使用`npm info`命令可以查看每个模块的具体信息。
+```
+npm info data
+```
+`data`即为之前安装的模块
