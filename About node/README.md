@@ -121,3 +121,79 @@ node规定使用函调函数的`第一个参数`必须是一个`错误对象`，
 - module.exports
 - exports
 - ......
+
+# 模块化结构
+nodejs采用的是模块化结构，安装[CommonJS规范](http://wiki.commonjs.org/wiki/CommonJS)定义与使用模块。
+模块与文件是一一对应关系，即一个模块对应一个文件。
+
+可以使用`reaquire`命令加载指定的模块，加载时可以省略文件的后缀名。
+```javascript
+var module1 = require('./module1.js')
+// 或者
+var module = require('/module1');
+```
+`require`方法的参数是模块文件的名字。这个参数有两种情况：
+1. 参数中包含文件路径，比如上面的例子
+2. 参数中不含文件路径。这个时候指向node模块安装的目录，或者是`node_modules`这个文件夹。
+```javascript
+var http = require('http');
+```
+有时候一个模块本身就是一个目录，一般为`package.json`，比如：
+```javascript
+{
+    name: "bar",
+    main: "./lib/bar.js"
+}
+```
+上面的`name`指的是模块，`main`指的是入口文件，即需要加载的文件。等同于
+```javascript
+var bar = require('bar/lib/bar.js');
+```
+这个情况一般存在于`package.json`配置文件。但是如果模块目录中没有这个文件，nodejs会尝试在模块目录中寻找`index.js或者index.node`文件进行加载。
+
+## 核心模块
+下面这些模块存在于node的`lib`子目录中，其中一部分可以与操作系统互动，这也是node与其他服务端语言的区别。
+- http：提供HTTP服务器功能
+- url：解析URL
+- fs：与文件系统交互
+- querystring：解析URL的查询字符串
+- child_process：新建子进程
+- util：提供一系列实用小工具
+- path：处理文件路径
+- crypto：提供加密与解密功能，基本上是对[OpenSSL](https://baike.baidu.com/item/openssl/5454803?fr=aladdin)的包装。
+
+**核心模块总是最优先加载的。**
+
+## 自定义模块
+因为nodejs采用的是CommonJS规范，只要符号这个规范就可以使用自定义模块。
+定义一个模块：新建一个`module1.js`，内容如下：
+```javascript
+module.exports = function(x){
+    console.log(x)
+}
+```
+这个自定义模块就是。通过`module.exports`对外输出了一个方法。
+使用这个模块
+```javascript
+var module1 = require('./mudule');
+module1("自定义模块");
+```
+因为在定义模块的时候定义`modelu.exports`的是一个函数，所以使用的时候`require`也是一个函数。可以直接加括号运行。
+
+**module变量是整个模块文件的顶层变量，它的exports属性就是模块向外输出的接口。**当然也可以输出其他的东西，比如`JSON`，`Object`等等。
+
+# 异常处理
+因为node是单线程运行环境，一旦抛出的错误没有被捕获，就会引起整个进程的崩溃。所以异常处理非常重要。
+node有3种方法传递一个错误：
+- 使用throw语句抛出一个错误对象
+- 将错误对象传递给回调函数（Node采用的方法）
+- 通过[EventEmitter](http://nodejs.cn/api/events.html#events_events)，发出一个error事件
+
+捕获错误就使用`try...catch`结构捕获。不过需要注意的是这个结构无法捕获异步异常。
+
+# 命令行运行脚本
+node脚本可以作为命令行脚本使用
+```
+node index.js
+```
+在REPL环境下运行index.js
