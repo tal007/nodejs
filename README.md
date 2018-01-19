@@ -1,6 +1,9 @@
 nodejs学习目录
-第 1 节 Node.js
+
+第 1 节 [Node.js简介](https://github.com/Anthony-Wilson/nodejs/tree/master/About%20node)
+
 第 2 节 了解 NPM
+
 第 3 节 NPM （一）
 第 4 节 NPM （二）
 第 5 节 NPM （三）
