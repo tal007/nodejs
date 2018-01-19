@@ -2,14 +2,9 @@ nodejs学习目录
 
 第 1 节 [Node.js简介](https://github.com/Anthony-Wilson/nodejs/tree/master/About%20node)
 
-第 2 节 了解 NPM
+第 2 节 了解 [NPM](https://github.com/Anthony-Wilson/nodejs/tree/master/lesson2-npm)
 
-第 3 节 NPM （一）
-第 4 节 NPM （二）
-第 5 节 NPM （三）
-第 6 节 NPM （四）
-第 7 节 NPM （五）
-第 8 节 初识 Node
+
 第 9 节 Buffer
 第 10 节 模块
 第 11 节 事件
