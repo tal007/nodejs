@@ -44,3 +44,16 @@ npm init -y
   "license": "ISC"
 }
 ```
+
+# npm set
+`npm set`可以用来设置环境变量
+```
+npm set init-author-name 'autohr name'
+npm set init-author-email 'author email'
+npm set init-auhor-url 'author网站'
+npm set init-license 'ISC'
+```
+上面的命令是为`npm init`设置默认值，以后执行`npm init`的时候，`package.json`中的作者姓名，邮箱，主页，许可证字段就会自动写入预设的值。这些信息存放在用户主目录下的`~/.npmrc`文件。
+![npmrc](http://p0hnox1tr.bkt.clouddn.com/npmrc.png)
+![npm-set](http://p0hnox1tr.bkt.clouddn.com/npm-set.png)
+如果某个项目有不同的设置，可以对该项目运行`npm config`。
