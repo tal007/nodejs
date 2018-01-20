@@ -4,12 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pretest": "echo \"pretest\"",
+    "test": "echo \"test\"",
+    "posttest": "echo \"posttest\"",
+    "start": "echo \"start 命令\"",
+    "build": "npm run start && npm run test"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "data": "^0.6.1"
-  }
+  },
+  "devDependencies": {}
 }

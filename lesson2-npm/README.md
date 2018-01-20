@@ -168,3 +168,174 @@ NODE_ENV=production npm install
 ```
 var http = require("http")
 ```
+
+# 避免系统权限
+默认清情况下node的模块都是安装到系统目录`(C:\Users\Administrator\AppData\Roaming\nvm\v8.9.1\node_modules\npm\lib)`,普通用户没有写入权限，这是需要用到`sudo`命令。如果每安装一个都需要使用此权限，不方便。此时在**主目录**可以配置一个`.npmrc`文件，然后在此文件中将`prefix`变量定义到主目录下面。
+```
+prefix = /home/yourUsername/nmp
+```
+在这个**主目录**下面新建`npm`子目录。
+```
+mkdir ~/npm
+```
+此后，全局安装的模块都会安装在这个子目录中。也是去`bin`目录寻找。
+
+最后，将这个路径在`.bash_profile`文件或者`.basjrc`中加入PATH变量。
+```
+export PATH = ~/npm/bin:$PATH
+```
+
+# npm updata，npm uninstall
+使用`npm update`命令可以更新本地安装的模块。`...`表示模块名字。
+```
+# 升级当前项目的指定模块
+npm update ...
+
+# 升级全局安装的模块
+npm update ... -global
+```
+上面的命令行只会更新顶层模块，而不会更新依赖。试下下面的命令可以更新依赖
+```
+npm --depth 9999 update
+```
+上面的`9999`就是一个数字，给一个很大的数可以保证下面的依赖都被选中。
+
+使用`npm uninstall`可以写在某个模块
+```
+npm uninstall ...
+
+# 卸载全局模块
+npm uninstall ... -global
+```
+
+# npm run
+使用`npm run`可以执行脚本。`package.json`文件的`scripts`字段中可以指定命令脚本。
+```json
+{
+  "name": "lesson2-npm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "echo \"start 命令\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "data": "^0.6.1"
+  }
+}
+```
+运行命令可以使用`npm run ...`启动命令。比如上面的`test`与`start`。可以使用`npm run test`与`npm run start`启动不同的脚本。这两个都是`npm`默认内置的两个命令。可以简写为`npm test`与`npm start`。其他的命令都必须加上`start`。
+
+如果运行时不加上具体的命令，即使用`npm run`，会列出全部的命令，而不是运行。
+```
+npm run
+
+Lifecycle scripts included in lesson2-npm:
+  test
+    echo "Error: no test specified" && exit 1
+  start
+    echo "start 命令" && exit 1
+```
+
+还可以在`scripts`中像下面那样执行配置
+```
+"build": "npm run start && npm run test"
+```
+注意上面的是两个`&&`连接。表示先运行`npm run start`在运行`npm run test`。如果使用的是一个`&`，则表示同时运行。
+
+## scripts常用脚本命令
+`npm-run-all`模块可以运行多个`scripts`中的脚本命令。
+```
+npm i npm-run-all -D
+```
+
+
+```
+# 继发执行，即先执行一个在执行下一个
+$ npm-run-all a.js b.js
+# 等同于
+$ npm run a.js && npm run b.js
+
+# 并行执行，即同时执行
+$ npm-run-all --parallel a.js b.js
+# 等同于
+$ npm run a.js & npm b.js
+
+# 混合执行
+$ npm-run-all a.js --parallel b.js c.js
+# 等同于
+$ npm-run-all a.js 
+$ npm-run-all --parallel b.js c.js
+```
+### 常用命令
+1. `start`命令：用于启动应用程序。
+2. `dev`命令：规定开发阶段所要做的处理，比如监视文件变化、实时编译……\
+3. `serve`命令：用于启动服务
+```
+"serve": "live-server dist/ --port=9090"
+```
+上面命令启动服务，用的是`live-server`模块，将服务启动在9090端口，展示dist子目录。
+
+使用`npm run serve`将自动启动浏览器在端口909，并监听页面的的变化
+
+4. `test`命令：一般用于执行测试：单元测试、*-lint……
+5. `prod`命令：一般用于规定进入生产环境时需要做的处理
+6. `help`命令：一般用于展示帮助信息。
+7. `docs`令：一般用于生成文档。
+
+## pre-与post-
+`npm run`为每条命令提供了`pre-`和`post-`两个钩子（hook）。
+一个简单的例子
+```json
+  "scripts": {
+    "pretest": "echo \"pretest\"",
+    "test": "echo \"test\"",
+    "posttest": "echo \"posttest\"",
+    "start": "echo \"start 命令\"",
+    "build": "npm run start && npm run test"
+  }
+```
+上面的`scripts`中的`test`。如果执行`npm test`会执行这两个钩子。先执行`pre-`在执行`post-`，所以最后输出
+- pretest
+- text
+- posttest
+
+## 内部变量
+`scripts`字段可以使用一些内部变量，主要是package.json的各种字段。
+
+比如，package.json的内容是`{"name":"foo", "version":"1.2.5"}`，那么变量`npm_package_name`的值是foo，变量`npm_package_version`的值是1.2.5。
+```
+{
+  "scripts":{
+    "bundle": "mkdir -p build/$npm_package_version/"
+  }
+}
+```
+运行`npm run bundle`以后，将会生成`build/1.2.5/`子目录。
+
+`config` 字段也可以用于设置内部字段。
+```
+  "name": "fooproject",
+  "config": {
+    "port": "3001"
+  },
+  "scripts": {
+    "serve": "http.createServer(...).listen(process.env.$npm_package_config_port)"
+  }
+```
+上面代码中，变量 `npm_package_config_port` 对应的就是 `3001`。
+
+## npm匹配规则
+- `*` 匹配0个或多个字符
+- `?` 匹配1个字符
+- `[...]` 匹配某个范围的字符。如果该范围的第一个字符是`!`或 `^`，则匹配不在该范围的字符。
+- `!(pattern|pattern|pattern)` 匹配任何不符合给定的模式
+- `?(pattern|pattern|pattern)` 匹配0个或1个给定的模式
+- `+(pattern|pattern|pattern) `匹配1个或多个给定的模式
+- `*(a|b|c)` 匹配0个或多个给定的模式
+- `@(pattern|pat*|pat?erN)` 只匹配给定模式之一
+- `**` 如果出现在路径部分，表示0个或多个子目录。
