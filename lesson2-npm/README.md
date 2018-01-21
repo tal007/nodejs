@@ -230,6 +230,15 @@ npm uninstall ... -global
 ```
 运行命令可以使用`npm run ...`启动命令。比如上面的`test`与`start`。可以使用`npm run test`与`npm run start`启动不同的脚本。这两个都是`npm`默认内置的两个命令。可以简写为`npm test`与`npm start`。其他的命令都必须加上`start`。
 
+如果`scripts`字段中存在如下情况：
+```json
+"scripts": {
+  "build": " node a.js "
+}
+```
+实际上是使用了nodejs的API运行一个js文件，一般用于`test`命令测试一个js文件。
+
+
 如果运行时不加上具体的命令，即使用`npm run`，会列出全部的命令，而不是运行。
 ```
 npm run
