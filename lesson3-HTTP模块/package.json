@@ -1,0 +1,17 @@
+{
+  "name": "lesson3-HTTP",
+  "version": "1.0.0",
+  "description": "HTTP模块主要是用于处理服务器请求。`HTTP`的API是的非常底层的。",
+  "main": "./demo/index.js",
+  "scripts": {
+    "test": "echo \"test\"",
+    "start": "node ./demo/index.js",
+    "get": "node ./demo/get.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+  },
+  "devDependencies": {}
+}
