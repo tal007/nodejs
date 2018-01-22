@@ -6,7 +6,7 @@ nodejs学习目录
 
 第 3 节 [了解 HTTP模块](https://github.com/Anthony-Wilson/nodejs/tree/master/lesson3-HTTP%E6%A8%A1%E5%9D%97)
 
-
+第 4 节 [了解 fs 模块](https://github.com/Anthony-Wilson/nodejs)
 
 第 9 节 Buffer
 第 10 节 模块
