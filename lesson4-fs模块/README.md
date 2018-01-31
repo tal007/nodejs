@@ -162,4 +162,209 @@ console.log("listen at http://127.0.0.1:5000");
 
 `mkdirSync()`为同步创建，就不存在回调函数。
 
+# readdir() 与 readdirSync()
+`readdir`方法用于读取目录，返回一个所包含的文件和子目录的**数组**。
+```javascript
+var http = require("http");
+var fs = require("fs");
 
+http.createServer((req,res)=>{
+    res.writeHead(200,{"Content-Type":"text/html;charset=utf8"});
+    fs.readdir("./",(err, files)=>{
+        if (err) {
+            console.log(err);
+            return;
+        }
+
+        console.log(files); 
+        /* 
+            ['1.txt',
+            'exists.js',
+            'mkdir.js',
+            'readdir.js',
+            'readFile.js',
+            'readFile.txt',
+            'README.md',
+            'writeFile.js',
+            'writeFile.txt']
+        */
+        res.end()
+    })
+}).listen(3000, "127.0.0.1")
+```
+这个与`readFile`方法其实差别不大。
+`readdirSync`就是他的同步方法。
+
+# stat()
+`stat`方法的参数是一个文件或者目录。他产生一个对象，次对象包含了该文件或目录的具体的信息。`我们往往通过此方法，判断正则处理的是一个文件还是一个目录。`
+```javascript
+var http = require("http");
+var fs = require("fs");
+
+http.createServer((req,res)=>{
+    res.writeHead(200,{"Content-Type":"text/html;charset=utf8"});
+    fs.readdir("./",(err, files)=>{
+        if (err) {
+            console.log(err);
+            return;
+        }
+
+        console.log(files);
+        files.forEach(file => {
+            fs.stat("./" + file, (err, stats)=>{
+                if (err) {
+                    throw err
+                }
+                if (stats.isFile()) {
+                    res.write(`${stats}是文件`)
+                } else if (stats.isDirectory() ){
+                    res.write(`${stats}是文件夹`)
+                }
+            })
+        });
+    })
+}).listen(3000, "127.0.0.1")
+```
+最后的结果是
+```
+[object Object]是文件
+[object Object]是文件
+[object Object]是文件
+[object Object]是文件
+[object Object]是文件
+[object Object]是文件
+[object Object]是文件
+[object Object]是文件
+[object Object]是文件
+[object Object]是文件
+```
+确实。每一个都是文件
+
+# watchFile() 与 unwatchFile()
+`watchFile`方法监听一个文件，如果该文件发生变化，就会自动触发回到函数。
+```javascript
+var http = require("http");
+var fs = require("fs");
+
+http.createServer((req,res)=>{
+    res.writeHead(200,{"Content-Type":"text/html;charset=utf8"});
+    fs.watchFile("./watchfile.txt", (curr, prev)=>{
+        console.log(curr);
+        console.log(prev);
+        
+        res.write(`当前的内容是${curr.mtime}`)
+        res.write(`之前的内容是${prev.mtime}`)
+    })
+}).listen(3000, "127.0.0.1")
+```
+下面是修改`watchFile.txt`文件后`curr`与`prev`的状态
+```
+# curr
+Stats {
+  dev: 1471824175,
+  mode: 33206,
+  nlink: 1,
+  uid: 0,
+  gid: 0,
+  rdev: 0,
+  blksize: undefined,
+  ino: 562949953450850,
+  size: 0,
+  blocks: undefined,
+  atimeMs: 1517422824237,
+  mtimeMs: 1517422887485.954,
+  ctimeMs: 1517422887485.954,
+  birthtimeMs: 1517422558296.34,
+  atime: 2018-01-31T18:20:24.237Z,
+  mtime: 2018-01-31T18:21:27.486Z,
+  ctime: 2018-01-31T18:21:27.486Z,
+  birthtime: 2018-01-31T18:15:58.296Z }
+
+# prev
+Stats {
+  dev: 1471824175,
+  mode: 33206,
+  nlink: 1,
+  uid: 0,
+  gid: 0,
+  rdev: 0,
+  blksize: undefined,
+  ino: 562949953450850,
+  size: 15,
+  blocks: undefined,
+  atimeMs: 1517422824237,
+  mtimeMs: 1517422862127.5117,
+  ctimeMs: 1517422862127.5117,
+  birthtimeMs: 1517422558296.34,
+  atime: 2018-01-31T18:20:24.237Z,
+  mtime: 2018-01-31T18:21:02.128Z,
+  ctime: 2018-01-31T18:21:02.128Z,
+  birthtime: 2018-01-31T18:15:58.296Z }
+```
+可以看到`size`的值由原来的0变为了15
+
+`unwatchFile`方法用于解除对文件的监听。
+
+# createReadStream()
+`createReadStream`方法用于打开大型的文本文件，创建一个读取操作的数据流。所谓的大型文件指的是：`文件的体积很大，读取操作的缓存装不下，只能分成几次发送，每次发送会触发一个`data`事件，发送结束触发`end`事件`。
+```javascript
+var fs = require('fs');
+
+function readLines(input, func) {
+  var remaining = '';
+
+  input.on('data', function(data) {
+    remaining += data;
+    var index = remaining.indexOf('\n');
+    var last  = 0;
+    while (index > -1) {
+      var line = remaining.substring(last, index);
+      last = index + 1;
+      func(line);
+      index = remaining.indexOf('\n', last);
+    }
+
+    remaining = remaining.substring(last);
+  });
+
+  input.on('end', function() {
+    if (remaining.length > 0) {
+      func(remaining);
+    }
+  });
+}
+
+function func(data) {
+  console.log('Line: ' + data);
+}
+
+var input = fs.createReadStream('lines.txt');
+readLines(input, func);
+```
+
+# createReadStream()
+`createWriteStream` 方法创建一个写入数据流对象，该对象的`write`方法用于写入数据，`end`方法用于结束写入操作。
+```javascript
+var out = fs.createWriteStream(fileName, {
+  encoding: 'utf8'
+});
+out.write(str);
+out.end();
+```
+
+`createReadStream`与`createReadStream`配合使用可以实现拷贝大型文件。
+```javascript
+function fileCopy(filename1, filename2, done) {
+  var input = fs.createReadStream(filename1);
+  var output = fs.createWriteStream(filename2);
+
+  input.on('data', function(d) { output.write(d); });
+  input.on('error', function(err) { throw err; });
+  input.on('end', function() {
+    output.end();
+    if (done) done();
+  });
+}
+```
+
+`createReadStream`与`createReadStream`的具体使用可以查看`Nodejs`的[Stream接口]()。
