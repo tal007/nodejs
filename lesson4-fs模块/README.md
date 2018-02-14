@@ -342,7 +342,7 @@ var input = fs.createReadStream('lines.txt');
 readLines(input, func);
 ```
 
-# createReadStream()
+# createWriteStream()
 `createWriteStream` 方法创建一个写入数据流对象，该对象的`write`方法用于写入数据，`end`方法用于结束写入操作。
 ```javascript
 var out = fs.createWriteStream(fileName, {
@@ -352,7 +352,7 @@ out.write(str);
 out.end();
 ```
 
-`createReadStream`与`createReadStream`配合使用可以实现拷贝大型文件。
+`createReadStream`与`createWriteStream`配合使用可以实现拷贝大型文件。
 ```javascript
 function fileCopy(filename1, filename2, done) {
   var input = fs.createReadStream(filename1);
@@ -367,4 +367,4 @@ function fileCopy(filename1, filename2, done) {
 }
 ```
 
-`createReadStream`与`createReadStream`的具体使用可以查看`Nodejs`的[Stream接口]()。
+`createReadStream`与`createWriteStream`的具体使用可以查看`Nodejs`的[Stream接口]()。
