@@ -6,19 +6,8 @@ nodejs学习目录
 
 第 3 节 [了解 HTTP模块](https://github.com/Anthony-Wilson/nodejs/tree/master/lesson3-HTTP%E6%A8%A1%E5%9D%97)
 
-第 4 节 [了解 fs 模块](https://github.com/Anthony-Wilson/nodejs)
+第 4 节 [了解 fs 模块](https://github.com/Anthony-Wilson/nodejs/tree/master/lesson4-fs%E6%A8%A1%E5%9D%97)
 
-第 9 节 Buffer
-第 10 节 模块
-第 11 节 事件
-第 12 节 流 （一）
-第 13 节 流（ 二）
-第 14 节 FS
-第 15 节 PATH
-第 16 节 URL
-第 17 节 QueryString
-第 18 节 OS
-第 19 节 断言
-第 20 节 子进程
-第 21 节 多核
-第 22 节 后言
+第 5 节 [了解 querystring 模块](https://github.com/Anthony-Wilson/nodejs/tree/master/lesson5-querystring%E6%A8%A1%E5%9D%97)
+
+第 6 节 [了解 url 模块](https://github.com/Anthony-Wilson/nodejs/tree/master/lesson6-url%E6%A8%A1%E5%9D%97)
