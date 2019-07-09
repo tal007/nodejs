@@ -1,0 +1,12 @@
+{
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "Nodejs lesson and demo",
+  "main": "index.js",
+  "repository": "git@github.com:tal007/nodejs.git",
+  "author": "tal007 <liuyutian_web@163.com>",
+  "license": "MIT",
+  "dependencies": {
+    "pm2": "^3.5.1"
+  }
+}
